@@ -39,7 +39,7 @@ export default function Draggable() {
             {/* <div class='box 1'/>
             <div class='box 2'/>
             <div class='box 3'/> */}
-            <div class='box 4' style={{left:boxes[4].x,top:boxes[4].y}} onMouseDown={()=>handleDrag(4)} onDragEnd={()=>handleDragEnd(4)}/>
+            <div class='box 4' draggable='true' style={{left:boxes[4].x,top:boxes[4].y}} onMouseDown={()=>handleDrag(4)} onMouseUp={()=>handleDragEnd(4)}/>
             {/* {console.log(pagePosition)} */}
         </div>
     )
