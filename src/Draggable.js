@@ -43,13 +43,12 @@ export default function Draggable() {
         }
     })
 
-
     return (
         <div class='draggable' onMouseMove={handleMouseOver}>
-            <div class='box 1' style={{left:boxes[1].x+'px',top:boxes[1].y+'px'}} onMouseDown={()=>handleMouseDown(1)} onMouseUp={()=>handleMouseUp(1)}/>
-            <div class='box 2' style={{left:boxes[2].x+'px',top:boxes[2].y+'px'}} onMouseDown={()=>handleMouseDown(2)} onMouseUp={()=>handleMouseUp(2)}/>
-            <div class='box 3' style={{left:boxes[3].x+'px',top:boxes[3].y+'px'}} onMouseDown={()=>handleMouseDown(3)} onMouseUp={()=>handleMouseUp(3)}/>
-            <div class='box 4' style={{left:boxes[4].x+'px',top:boxes[4].y+'px'}} onMouseDown={()=>handleMouseDown(4)} onMouseUp={()=>handleMouseUp(4)}/>
+            <div class='box 1' style={{background:'blue',left:boxes[1].x+'px',top:boxes[1].y+'px'}} onMouseDown={()=>handleMouseDown(1)} onMouseUp={()=>handleMouseUp(1)}/>
+            <div class='box 2' style={{background:'orange',left:boxes[2].x+'px',top:boxes[2].y+'px'}} onMouseDown={()=>handleMouseDown(2)} onMouseUp={()=>handleMouseUp(2)}/>
+            <div class='box 3' style={{background:'purple',left:boxes[3].x+'px',top:boxes[3].y+'px'}} onMouseDown={()=>handleMouseDown(3)} onMouseUp={()=>handleMouseUp(3)}/>
+            <div class='box 4' style={{background:'green',left:boxes[4].x+'px',top:boxes[4].y+'px'}} onMouseDown={()=>handleMouseDown(4)} onMouseUp={()=>handleMouseUp(4)}/>
         </div>
     )
 }
