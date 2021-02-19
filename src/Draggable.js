@@ -26,11 +26,10 @@ export default function Draggable() {
         newBoxes[box].x=pagePosition.x
         newBoxes[box].y=pagePosition.y
         setBoxes(newBoxes)
-        // console.log('dragging')
+        console.log('dragging')
     }
 
     function handleDragEnd(){
-        // console.log('drag end')
     }
 
 
@@ -39,8 +38,7 @@ export default function Draggable() {
             {/* <div class='box 1'/>
             <div class='box 2'/>
             <div class='box 3'/> */}
-            <div class='box 4' draggable='true' style={{left:boxes[4].x,top:boxes[4].y}} onMouseDown={()=>handleDrag(4)} onMouseUp={()=>handleDragEnd(4)}/>
-            {/* {console.log(pagePosition)} */}
+            <div class='box 4' draggable='true' style={{left:boxes[4].x+'px',top:boxes[4].y+'px'}} onMouseDown={()=>handleDrag(4)} onMouseUp={()=>handleDragEnd(4)}/>
         </div>
     )
 }
