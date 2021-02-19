@@ -10,6 +10,10 @@
     width: 50px;
     background: yellow;
     position: absolute;
+    cursor: pointer;
+    /* margin-bottom: 50px;
+    margin-right: 50px; */
+
     /* left: 4px; */
 }
 
