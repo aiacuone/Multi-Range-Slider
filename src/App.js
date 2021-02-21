@@ -9,8 +9,8 @@ function App() {
 
   return (
     <div class="app">
-      {/* <MultiRange/> */}
-      <Draggable/>
+      <MultiRange/>
+      {/* <Draggable/> */}
     </div>
   );
 }
