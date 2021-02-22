@@ -4,13 +4,11 @@ import './multiRange.css'
 
 export default function MultiRange() {
 
-
   let [min,setMin]=useState(30)
   let [max,setMax]=useState(80)
   let [minDrag,setMinDrag]=useState(false)
   let [maxDrag,setMaxDrag]=useState(false)
   let [trackWidth,setTrackWidth]=useState(0)
-
 
   function handleMouseDown(){
     let minDistance= Math.abs(trackWidth-min)
@@ -25,7 +23,6 @@ export default function MultiRange() {
     }
   }
 
-
   function handleMove(e){
     let parentWidthPercentage=parseInt(((e.pageX-(e.target.parentElement.offsetParent.offsetLeft+e.target.parentElement.offsetLeft))/e.target.parentElement.clientWidth)*100)
     let widthPercentage=parseInt(((e.pageX-(e.target.offsetParent.offsetLeft+e.target.offsetLeft))/e.target.clientWidth)*100)
@@ -33,7 +30,7 @@ export default function MultiRange() {
     e.target.className!=='track'&&setTrackWidth(parentWidthPercentage)
     e.target.className==='track'&&setTrackWidth(widthPercentage)
   }
-
+  
   useEffect(()=>{
     if(minDrag&&trackWidth<101&&trackWidth>-1&&trackWidth<max){
       setMin(trackWidth)
@@ -41,11 +38,12 @@ export default function MultiRange() {
     if(maxDrag&&trackWidth<101&&trackWidth>-1&&trackWidth>min){
       setMax(trackWidth)
     }
+
     document.body.addEventListener('mouseup',handleMouseUp)
     return()=>{
       document.body.removeEventListener('mouseup',handleMouseUp)
     }
-
+    
   })
 
   function handleMouseUp(){
@@ -53,16 +51,17 @@ export default function MultiRange() {
     setMaxDrag(false)
   }
 
-  let track = useRef()
-
+  let track=useRef()
+    
     return (
       <div class='multiRange'>
-          <h3>{min}-{max}</h3>
-          <div ref={track} style={{width:'90%'}}class='track'onMouseMove={handleMove} onMouseDown={handleMouseDown}  >
+          <div><h3>{min}-{max}</h3></div>
+          <div class='track' ref={track} onMouseMove={handleMove} onMouseDown={handleMouseDown}>
+              <div class='rangeFill' onMouseDown={(e)=>e.preventDefault()}style={{left:min+'%',right:max+'%',width:track.current&&track.current.clientWidth*(max/100)-(track.current.clientWidth*(min/100))+1+'px'}}/>
               <div class='thumb min' style={{left:min+'%'}}/>
               <div class='thumb max' style={{left:max+'%'}}/>
           </div>
-          {/* {console.log(track.current.style.width)} */}
       </div>
     )
 }
+
