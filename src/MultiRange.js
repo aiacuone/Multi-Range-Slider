@@ -4,7 +4,9 @@ import './multiRange.css'
 export default function MultiRange() {
 	let track = useRef()
 
-	let step = 10
+  let step = 10
+  let minValue = 1991
+  let maxValue = 2021
 
 	let [min, setMin] = useState(30)
 	let [max, setMax] = useState(70)
@@ -13,7 +15,7 @@ export default function MultiRange() {
 	let [trackWidth, setTrackWidth] = useState(0)
 	let [trackFill, setTrackFill] = useState(undefined)
 
-  //Finds the Closest Thumb
+	//Finds the Closest Thumb
 	function handleMouseDown() {
 		let minDistance = Math.abs(trackWidth - min)
 		let maxDistance = Math.abs(trackWidth - max)
@@ -27,7 +29,7 @@ export default function MultiRange() {
 		}
 	}
 
-  //Gets Width % of Track
+	//Gets Width % of Track
 	function handleMove(e) {
 		let parentWidthPercentage = parseInt(
 			((e.pageX -
@@ -45,23 +47,36 @@ export default function MultiRange() {
 		e.target.className === 'track' && setTrackWidth(widthPercentage)
 	}
 
-  useEffect(() => {
-    //Sets the Thumb Position
-		if (minDrag && trackWidth < 101 && trackWidth > -1 && trackWidth < max) {
+
+	useEffect(() => {
+		//Sets the Thumb Position
+		if (
+			minDrag &&
+			trackWidth < 101 &&
+			trackWidth > -1 &&
+			trackWidth < max &&
+			trackWidth % step === 0
+		) {
 			setMin(trackWidth)
 		}
-		if (maxDrag && trackWidth < 101 && trackWidth > -1 && trackWidth > min) {
+		if (
+			maxDrag &&
+			trackWidth < 101 &&
+			trackWidth > -1 &&
+			trackWidth > min &&
+			trackWidth % step === 0
+		) {
 			setMax(trackWidth)
 		}
 
-    //Sets Track Fill Width
+		//Sets Track Fill Width
 		setTrackFill(
 			parseInt(
 				track.current.clientWidth * (max / 100) -
 					track.current.clientWidth * (min / 100)
 			) + 1
 		)
-    //Event listeners to stop bug when mouse leaves page or component, that thumb locks into moving
+		//Event listeners to stop bug when mouse leaves page or component, that thumb locks into moving
 		document.body.addEventListener('mouseup', handleMouseUp)
 		document.body.addEventListener('mouseleave', handleMouseUp)
 		return () => {
@@ -94,7 +109,8 @@ export default function MultiRange() {
 				/>
 				<div class="thumb min" style={{ left: min + '%' }} />
 				<div class="thumb max" style={{ left: max + '%' }} />
-			</div>
+      </div>
+      {/* {console.log(trackWidth)} */}
 		</div>
 	)
 }
