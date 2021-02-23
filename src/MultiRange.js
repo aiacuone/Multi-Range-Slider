@@ -2,83 +2,76 @@ import React, { useState, useEffect, useRef } from 'react'
 import './multiRange.css'
 
 export default function MultiRange() {
-	let track = useRef()
-
-  let step = 10
-  let minValue = 1991
-  let maxValue = 2021
-
-	let [min, setMin] = useState(30)
-	let [max, setMax] = useState(70)
+	let [min, setMin] = useState(3)
+	let [max, setMax] = useState(10)
 	let [minDrag, setMinDrag] = useState(false)
 	let [maxDrag, setMaxDrag] = useState(false)
 	let [trackWidth, setTrackWidth] = useState(0)
 	let [trackFill, setTrackFill] = useState(undefined)
+	let [maxTrackWidth, setMaxTrackWidth] = useState('')
+
+	let track = useRef()
+	let step = 2
+	let minValue = 1990
+	let maxValue = 2022
+	let pixelsPerRatio = Math.ceil(maxTrackWidth / (maxValue - minValue))
 
 	//Finds the Closest Thumb
 	function handleMouseDown() {
-		let minDistance = Math.abs(trackWidth - min)
-		let maxDistance = Math.abs(trackWidth - max)
-
-		if (minDistance <= maxDistance && trackWidth < 101) {
-			setMin(trackWidth)
+		let minDistance = Math.abs(trackWidth - min * pixelsPerRatio)
+		let maxDistance = Math.abs(trackWidth - max * pixelsPerRatio)
+		if (minDistance <= maxDistance && trackWidth < maxTrackWidth) {
+			setMin(Math.round(trackWidth / pixelsPerRatio))
 			setMinDrag(true)
-		} else if (minDistance >= maxDistance && trackWidth < 101) {
-			setMax(trackWidth)
+		} else if (minDistance >= maxDistance && trackWidth < maxTrackWidth) {
+			setMax(Math.round(trackWidth / pixelsPerRatio))
 			setMaxDrag(true)
 		}
 	}
 
 	//Gets Width % of Track
 	function handleMove(e) {
-		let parentWidthPercentage = parseInt(
-			((e.pageX -
-				(e.target.parentElement.offsetParent.offsetLeft +
-					e.target.parentElement.offsetLeft)) /
-				e.target.parentElement.clientWidth) *
-				100
-		)
-		let widthPercentage = parseInt(
-			((e.pageX - (e.target.offsetParent.offsetLeft + e.target.offsetLeft)) /
-				e.target.clientWidth) *
-				100
-		)
-		e.target.className !== 'track' && setTrackWidth(parentWidthPercentage)
-		e.target.className === 'track' && setTrackWidth(widthPercentage)
+		let parentPixelWidth =
+			e.pageX -
+			(e.target.parentElement.offsetParent.offsetLeft +
+				e.target.parentElement.offsetLeft)
+
+		let pixelWidth =
+			e.pageX - (e.target.offsetParent.offsetLeft + e.target.offsetLeft)
+
+		e.target.className !== 'track' && setTrackWidth(parentPixelWidth)
+		e.target.className === 'track' && setTrackWidth(pixelWidth)
 	}
 
-
 	useEffect(() => {
+		//Sets the maximum length of track
+		setMaxTrackWidth(track.current.clientWidth)
+
+		//Sets Track Fill Width
+		setTrackFill(parseInt((max - min) * pixelsPerRatio))
+
 		//Sets the Thumb Position
 		if (
 			minDrag &&
-			trackWidth < 101 &&
-			trackWidth > -1 &&
-			trackWidth < max &&
-			trackWidth % step === 0
+			trackWidth % pixelsPerRatio < 13 &&
+			trackWidth < maxTrackWidth &&
+			trackWidth < max * pixelsPerRatio
 		) {
-			setMin(trackWidth)
+			setMin(Math.round(trackWidth / pixelsPerRatio))
 		}
 		if (
 			maxDrag &&
-			trackWidth < 101 &&
-			trackWidth > -1 &&
-			trackWidth > min &&
-			trackWidth % step === 0
+			trackWidth % pixelsPerRatio < 13 &&
+			trackWidth < maxTrackWidth &&
+			trackWidth > min * pixelsPerRatio
 		) {
-			setMax(trackWidth)
+			setMax(Math.round(trackWidth / pixelsPerRatio))
 		}
 
-		//Sets Track Fill Width
-		setTrackFill(
-			parseInt(
-				track.current.clientWidth * (max / 100) -
-					track.current.clientWidth * (min / 100)
-			) + 1
-		)
 		//Event listeners to stop bug when mouse leaves page or component, that thumb locks into moving
 		document.body.addEventListener('mouseup', handleMouseUp)
 		document.body.addEventListener('mouseleave', handleMouseUp)
+
 		return () => {
 			document.body.removeEventListener('mouseup', handleMouseUp)
 			document.body.removeEventListener('mouseleave', handleMouseUp)
@@ -94,7 +87,7 @@ export default function MultiRange() {
 		<div class="multiRange">
 			<div>
 				<h3>
-					{min}-{max}
+					{minValue + min}-{minValue + max}
 				</h3>
 			</div>
 			<div
@@ -105,12 +98,29 @@ export default function MultiRange() {
 				<div
 					class="rangeFill"
 					onMouseDown={(e) => e.preventDefault()}
-					style={{ left: min + '%', right: max + '%', width: trackFill }}
+					style={{
+						left: min * pixelsPerRatio + 'px',
+						right: max * pixelsPerRatio + 'px',
+						width: trackFill,
+					}}
 				/>
-				<div class="thumb min" style={{ left: min + '%' }} />
-				<div class="thumb max" style={{ left: max + '%' }} />
-      </div>
-      {/* {console.log(trackWidth)} */}
+				<div
+					class="thumb min"
+					onMouseDown={(e) => e.preventDefault()}
+					style={{
+						left: min * pixelsPerRatio + 'px',
+						width: pixelsPerRatio + 'px',
+					}}
+				/>
+				<div
+					class="thumb max"
+					onMouseDown={(e) => e.preventDefault()}
+					style={{
+						left: max * pixelsPerRatio + 'px',
+						width: pixelsPerRatio + 'px',
+					}}
+				/>
+			</div>
 		</div>
 	)
 }
