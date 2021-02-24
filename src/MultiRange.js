@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react'
 import './multiRange.css'
 
 export default function MultiRange() {
-	let min = 1990
-	let max = 2021
-	let arr = []
+	//future props
+	let min = 0
+	let max = 100
+	let multiplier = 1000
+	let title = 'Steam Rating'
 
 	let [trackMouseDown, setTrackMouseDown] = useState(false)
-	let [minThumb, setMinThumb] = useState(1990)
-	let [maxThumb, setMaxThumb] = useState(2021)
+	let [minThumb, setMinThumb] = useState(min)
+	let [maxThumb, setMaxThumb] = useState(max)
 
+	let arr = []
 	for (let i = min; i < max + 1; i++) {
 		arr.push(i)
 	}
@@ -65,9 +68,14 @@ export default function MultiRange() {
 
 	return (
 		<div class="multiRange">
+			<div class={'headerContainer ' + { title }}>
+				<div class="header min"><h2>{minThumb * multiplier}</h2></div>
+				<div class="header title"><h1>{title}</h1></div>
+				<div class='header max'><h2>{maxThumb * multiplier}</h2></div>
+			</div>
 			{
 				<h3>
-					{minThumb}-{maxThumb}
+					{/* {minThumb * multiplier}-{maxThumb * multiplier} */}
 				</h3>
 			}
 			<div

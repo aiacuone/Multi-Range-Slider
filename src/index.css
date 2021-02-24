@@ -6,6 +6,7 @@
   -webkit-user-select: none;
 	-webkit-user-drag: none;
 	-webkit-app-region: no-drag;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .app{

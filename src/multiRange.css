@@ -1,40 +1,59 @@
-.multiRange{
-  width: 90%;
-  height: 90%;
-  background: darkgrey;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.multiRange {
+	width: 90%;
+	height: 90%;
+	background: darkgrey;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 }
 
-.track{
+.headerContainer{
   width: 90%;
-  height: 100px;
   display: flex;
-  justify-content: center;
-  cursor: pointer;
-  align-items: center;
 }
-  
-.section{
-  height: 100%;
+
+.header{
   width: 100%;
   display: flex;
+  align-items: flex-end;
 }
 
-
-.thumbContainer{
-  width: 100%;
-  height: 100%;
-  display: flex;
+.header.title{
+  justify-content: center;
 }
 
-.thumbContainer.max{
+.header.max{
   justify-content: flex-end;
 }
 
-.thumb{
-  height: 100%;
-  width: 50%;
-  background: white;
+.track {
+	width: 90%;
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	cursor: pointer;
+	align-items: center;
+}
+
+.section {
+	height: 100%;
+	width: 100%;
+	display: flex;
+}
+
+.thumbContainer {
+	width: 100%;
+	height: 100%;
+	display: flex;
+}
+
+.thumbContainer.max {
+	justify-content: flex-end;
+}
+
+.thumb {
+	height: 100%;
+	width: 20px;
+	background: white;
 }
