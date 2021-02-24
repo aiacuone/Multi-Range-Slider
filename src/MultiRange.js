@@ -1,93 +1,80 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './multiRange.css'
 
 export default function MultiRange() {
-	let [totalTrackWidth, setTotalTrackWidth] = useState()
-	let [thumbMin, setThumbMin] = useState(300)
-	let [thumbMax, setThumbMax] = useState(600)
-	let [trackCursorPosition, setTrackCursorPosition] = useState()
-	let [dragMax, setDragMax] = useState(false)
-	let [dragMin, setDragMin] = useState(false)
-	let track = useRef()
-
 	let min = 1990
 	let max = 2021
-	let pixelRatio = Math.round(totalTrackWidth / (max - min))
+	let arr = []
+
+	let [trackMouseDown, setTrackMouseDown] = useState(false)
+	let [minThumb, setMinThumb] = useState(1990)
+	let [maxThumb, setMaxThumb] = useState(2021)
+
+	for (let i = min; i < max + 1; i++) {
+		arr.push(i)
+	}
+
+	let sections = arr.map((item) => {
+		return (
+			<div
+				onClick={() =>
+					Math.abs(minThumb - item) < Math.abs(maxThumb - item)
+						? setMinThumb(item)
+						: setMaxThumb(item)
+				}
+				class={'section ' + item}
+				onMouseEnter={() => {
+					if (trackMouseDown) {
+						if (Math.abs(minThumb - item) < Math.abs(maxThumb - item)) {
+							setMinThumb(item)
+						} else {
+							setMaxThumb(item)
+						}
+					}
+				}}
+				style={{
+					background:
+						item < minThumb || item > maxThumb ? 'rgb(36, 36, 36)' : 'grey',
+				}}>
+				{minThumb == item && (
+					<div class="thumbContainer min">
+						<div class="thumb min" />
+					</div>
+				)}
+				{maxThumb == item && (
+					<div class="thumbContainer max">
+						<div class="thumb max" />
+					</div>
+				)}
+			</div>
+		)
+	})
 
 	useEffect(() => {
-		setTotalTrackWidth(track.current.clientWidth)
-
-		if (dragMin && trackCursorPosition % pixelRatio < 5) {
-			console.log(trackCursorPosition / pixelRatio)
-			setThumbMin(trackCursorPosition)
-		}
-		if (dragMax && trackCursorPosition % pixelRatio < 5) {
-			setThumbMax(trackCursorPosition)
-		}
-
-		document.body.addEventListener('mouseleave', handleMouseUp)
-		document.body.addEventListener('mouseup', handleMouseUp)
-		window.addEventListener('resize', handleResize)
-
+		document.body.addEventListener('mouseup', () => setTrackMouseDown(false))
+		document.body.addEventListener('mouseleave', () => setTrackMouseDown(false))
 		return () => {
-			document.body.removeEventListener('mouseleave', handleMouseUp)
-			window.removeEventListener('resize', handleResize)
-			document.body.removeEventListener('mouseup', handleMouseUp)
+			document.body.removeEventListener('mouseup', () =>
+				setTrackMouseDown(false)
+			)
+			document.body.removeEventListener('mouseleave', () =>
+				setTrackMouseDown(false)
+			)
 		}
 	})
 
-	function handleResize() {
-		setTotalTrackWidth(track.current.clientWidth)
-	}
-
-	function handleMouseUp() {
-		setDragMax(false)
-		setDragMin(false)
-	}
-
-	function handleMouseDown() {
-		// console.log(Math.abs(trackCursorPosition - thumbMin))
-		Math.abs(trackCursorPosition - thumbMin) <
-		Math.abs(trackCursorPosition - thumbMax)
-			? setDragMin(true)
-			: setDragMax(true)
-	}
-	// function handleMouseDown(callback) {
-	// 	callback(true)
-	// }
-
-	// console.log(dragMin, dragMax)
-
-	// console.log(pixelRatio)
-
 	return (
 		<div class="multiRange">
-			<div ref={track} class="track">
-				<div class="visualTrack" style={{ width: pixelRatio * (max - min) }} />
-
-				<div
-					class="thumb min"
-					onMouseMove={(e) => {
-						setTrackCursorPosition(e.pageX - e.target.parentElement.offsetLeft)
-					}}
-					// onMouseDown={() => handleMouseDown(setDragMin)}
-					style={{ left: thumbMin }}
-				/>
-				<div
-					class="thumb max"
-					onMouseMove={(e) => {
-						setTrackCursorPosition(e.pageX - e.target.parentElement.offsetLeft)
-					}}
-					// onMouseDown={() => handleMouseDown(setDragMax)}
-					style={{ left: thumbMax }}
-				/>
-				<div
-					class="tracker"
-					onMouseMove={(e) => {
-						setTrackCursorPosition(e.pageX - e.target.parentElement.offsetLeft)
-					}}
-					onMouseDown={handleMouseDown}
-				/>
+			{
+				<h3>
+					{minThumb}-{maxThumb}
+				</h3>
+			}
+			<div
+				class="track"
+				onMouseUp={() => setTrackMouseDown(false)}
+				onMouseDown={() => setTrackMouseDown(true)}>
+				{sections}
 			</div>
 		</div>
 	)

@@ -1,39 +1,40 @@
 .multiRange{
   width: 90%;
   height: 90%;
+  background: darkgrey;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: darkgrey;
 }
 
 .track{
   width: 90%;
-  height: 50px;
-  border: 1px black solid;
-  /* opacity: .3; */
-  position: relative;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  align-items: center;
+}
+  
+.section{
+  height: 100%;
+  width: 100%;
+  display: flex;
 }
 
-.tracker{
+
+.thumbContainer{
   width: 100%;
   height: 100%;
-  background: orange;
-  opacity: .3;
-  position: absolute;
+  display: flex;
+}
+
+.thumbContainer.max{
+  justify-content: flex-end;
 }
 
 .thumb{
   height: 100%;
-  width: 10px;
-  background: blue;
-  position: absolute;
-  /* left: 0; */
+  width: 50%;
+  background: white;
 }
-
-.visualTrack{
-  height: 100%;
-  /* background: green; */
-  position: absolute;
-}
-  
