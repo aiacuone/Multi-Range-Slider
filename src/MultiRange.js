@@ -1,124 +1,92 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import './multiRange.css'
 
 export default function MultiRange() {
-	let [min, setMin] = useState(3)
-	let [max, setMax] = useState(10)
-	let [minDrag, setMinDrag] = useState(false)
-	let [maxDrag, setMaxDrag] = useState(false)
-	let [trackWidth, setTrackWidth] = useState(0)
-	let [trackFill, setTrackFill] = useState(undefined)
-	let [maxTrackWidth, setMaxTrackWidth] = useState('')
-
+	let [totalTrackWidth, setTotalTrackWidth] = useState()
+	let [thumbMin, setThumbMin] = useState(300)
+	let [thumbMax, setThumbMax] = useState(600)
+	let [trackCursorPosition, setTrackCursorPosition] = useState()
+	let [dragMax, setDragMax] = useState(false)
+	let [dragMin, setDragMin] = useState(false)
 	let track = useRef()
-	let step = 2
-	let minValue = 1990
-	let maxValue = 2022
-	let pixelsPerRatio = Math.ceil(maxTrackWidth / (maxValue - minValue))
 
-	//Finds the Closest Thumb
-	function handleMouseDown() {
-		let minDistance = Math.abs(trackWidth - min * pixelsPerRatio)
-		let maxDistance = Math.abs(trackWidth - max * pixelsPerRatio)
-		if (minDistance <= maxDistance && trackWidth < maxTrackWidth) {
-			setMin(Math.round(trackWidth / pixelsPerRatio))
-			setMinDrag(true)
-		} else if (minDistance >= maxDistance && trackWidth < maxTrackWidth) {
-			setMax(Math.round(trackWidth / pixelsPerRatio))
-			setMaxDrag(true)
-		}
-	}
-
-	//Gets Width % of Track
-	function handleMove(e) {
-		let parentPixelWidth =
-			e.pageX -
-			(e.target.parentElement.offsetParent.offsetLeft +
-				e.target.parentElement.offsetLeft)
-
-		let pixelWidth =
-			e.pageX - (e.target.offsetParent.offsetLeft + e.target.offsetLeft)
-
-		e.target.className !== 'track' && setTrackWidth(parentPixelWidth)
-		e.target.className === 'track' && setTrackWidth(pixelWidth)
-	}
+	let min = 1990
+	let max = 2021
+	let pixelRatio = Math.round(totalTrackWidth / (max - min))
 
 	useEffect(() => {
-		//Sets the maximum length of track
-		setMaxTrackWidth(track.current.clientWidth)
+		setTotalTrackWidth(track.current.clientWidth)
 
-		//Sets Track Fill Width
-		setTrackFill(parseInt((max - min) * pixelsPerRatio))
-
-		//Sets the Thumb Position
-		if (
-			minDrag &&
-			trackWidth % pixelsPerRatio < 13 &&
-			trackWidth < maxTrackWidth &&
-			trackWidth < max * pixelsPerRatio
-		) {
-			setMin(Math.round(trackWidth / pixelsPerRatio))
+		if (dragMin && trackCursorPosition % pixelRatio < 5) {
+			console.log(trackCursorPosition / pixelRatio)
+			setThumbMin(trackCursorPosition)
 		}
-		if (
-			maxDrag &&
-			trackWidth % pixelsPerRatio < 13 &&
-			trackWidth < maxTrackWidth &&
-			trackWidth > min * pixelsPerRatio
-		) {
-			setMax(Math.round(trackWidth / pixelsPerRatio))
+		if (dragMax && trackCursorPosition % pixelRatio < 5) {
+			setThumbMax(trackCursorPosition)
 		}
 
-		//Event listeners to stop bug when mouse leaves page or component, that thumb locks into moving
-		document.body.addEventListener('mouseup', handleMouseUp)
 		document.body.addEventListener('mouseleave', handleMouseUp)
+		document.body.addEventListener('mouseup', handleMouseUp)
+		window.addEventListener('resize', handleResize)
 
 		return () => {
-			document.body.removeEventListener('mouseup', handleMouseUp)
 			document.body.removeEventListener('mouseleave', handleMouseUp)
+			window.removeEventListener('resize', handleResize)
+			document.body.removeEventListener('mouseup', handleMouseUp)
 		}
 	})
 
-	function handleMouseUp() {
-		setMinDrag(false)
-		setMaxDrag(false)
+	function handleResize() {
+		setTotalTrackWidth(track.current.clientWidth)
 	}
+
+	function handleMouseUp() {
+		setDragMax(false)
+		setDragMin(false)
+	}
+
+	function handleMouseDown() {
+		// console.log(Math.abs(trackCursorPosition - thumbMin))
+		Math.abs(trackCursorPosition - thumbMin) <
+		Math.abs(trackCursorPosition - thumbMax)
+			? setDragMin(true)
+			: setDragMax(true)
+	}
+	// function handleMouseDown(callback) {
+	// 	callback(true)
+	// }
+
+	// console.log(dragMin, dragMax)
+
+	// console.log(pixelRatio)
 
 	return (
 		<div class="multiRange">
-			<div>
-				<h3>
-					{minValue + min}-{minValue + max}
-				</h3>
-			</div>
-			<div
-				class="track"
-				ref={track}
-				onMouseMove={handleMove}
-				onMouseDown={handleMouseDown}>
-				<div
-					class="rangeFill"
-					onMouseDown={(e) => e.preventDefault()}
-					style={{
-						left: min * pixelsPerRatio + 'px',
-						right: max * pixelsPerRatio + 'px',
-						width: trackFill,
-					}}
-				/>
+			<div ref={track} class="track">
+				<div class="visualTrack" style={{ width: pixelRatio * (max - min) }} />
+
 				<div
 					class="thumb min"
-					onMouseDown={(e) => e.preventDefault()}
-					style={{
-						left: min * pixelsPerRatio + 'px',
-						width: pixelsPerRatio + 'px',
+					onMouseMove={(e) => {
+						setTrackCursorPosition(e.pageX - e.target.parentElement.offsetLeft)
 					}}
+					// onMouseDown={() => handleMouseDown(setDragMin)}
+					style={{ left: thumbMin }}
 				/>
 				<div
 					class="thumb max"
-					onMouseDown={(e) => e.preventDefault()}
-					style={{
-						left: max * pixelsPerRatio + 'px',
-						width: pixelsPerRatio + 'px',
+					onMouseMove={(e) => {
+						setTrackCursorPosition(e.pageX - e.target.parentElement.offsetLeft)
 					}}
+					// onMouseDown={() => handleMouseDown(setDragMax)}
+					style={{ left: thumbMax }}
+				/>
+				<div
+					class="tracker"
+					onMouseMove={(e) => {
+						setTrackCursorPosition(e.pageX - e.target.parentElement.offsetLeft)
+					}}
+					onMouseDown={handleMouseDown}
 				/>
 			</div>
 		</div>
