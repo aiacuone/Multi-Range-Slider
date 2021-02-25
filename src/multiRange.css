@@ -1,4 +1,4 @@
-.multiRange {
+.multi-range {
 	width: 90%;
 	height: 90%;
 	background: darkgrey;
@@ -8,26 +8,26 @@
 	flex-direction: column;
 }
 
-.headerContainer{
-  width: 90%;
-  display: flex;
+.header-container-multi-range {
+	width: 90%;
+	display: flex;
 }
 
-.header{
-  width: 100%;
-  display: flex;
-  align-items: flex-end;
+.header-multi-range {
+	width: 100%;
+	display: flex;
+	align-items: flex-end;
 }
 
-.header.title{
-  justify-content: center;
+.header-multi-range.title {
+	justify-content: center;
 }
 
-.header.max{
-  justify-content: flex-end;
+.header-multi-range.max {
+	justify-content: flex-end;
 }
 
-.track {
+.track-multi-range {
 	width: 90%;
 	height: 100px;
 	display: flex;
@@ -36,23 +36,23 @@
 	align-items: center;
 }
 
-.section {
+.section-multi-range {
 	height: 100%;
 	width: 100%;
 	display: flex;
 }
 
-.thumbContainer {
+.thumbContainer-multi-range {
 	width: 100%;
 	height: 100%;
 	display: flex;
 }
 
-.thumbContainer.max {
+.thumbContainer-multi-range.max {
 	justify-content: flex-end;
 }
 
-.thumb {
+.thumb-multi-range {
 	height: 100%;
 	width: 20px;
 	background: white;

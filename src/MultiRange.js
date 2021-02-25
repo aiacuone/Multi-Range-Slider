@@ -25,7 +25,7 @@ export default function MultiRange() {
 						? setMinThumb(item)
 						: setMaxThumb(item)
 				}
-				class={'section ' + item}
+				class={'section-multi-range ' + item}
 				onMouseEnter={() => {
 					if (trackMouseDown) {
 						if (Math.abs(minThumb - item) < Math.abs(maxThumb - item)) {
@@ -40,13 +40,13 @@ export default function MultiRange() {
 						item < minThumb || item > maxThumb ? 'rgb(36, 36, 36)' : 'grey',
 				}}>
 				{minThumb == item && (
-					<div class="thumbContainer min">
-						<div class="thumb min" />
+					<div class="thumbContainer-multi-range min">
+						<div class="thumb-multi-range min" />
 					</div>
 				)}
 				{maxThumb == item && (
-					<div class="thumbContainer max">
-						<div class="thumb max" />
+					<div class="thumbContainer-multi-range max">
+						<div class="thumb-multi-range max" />
 					</div>
 				)}
 			</div>
@@ -67,19 +67,20 @@ export default function MultiRange() {
 	})
 
 	return (
-		<div class="multiRange">
-			<div class={'headerContainer ' + { title }}>
-				<div class="header min"><h2>{minThumb * multiplier}</h2></div>
-				<div class="header title"><h1>{title}</h1></div>
-				<div class='header max'><h2>{maxThumb * multiplier}</h2></div>
+		<div class="multi-range">
+			<div class={'header-container-multi-range ' + { title }}>
+				<div class="header-multi-range min">
+					<h2>{minThumb * multiplier}</h2>
+				</div>
+				<div class="header-multi-range title">
+					<h1>{title}</h1>
+				</div>
+				<div class="header-multi-range max">
+					<h2>{maxThumb * multiplier}</h2>
+				</div>
 			</div>
-			{
-				<h3>
-					{/* {minThumb * multiplier}-{maxThumb * multiplier} */}
-				</h3>
-			}
 			<div
-				class="track"
+				class="track-multi-range"
 				onMouseUp={() => setTrackMouseDown(false)}
 				onMouseDown={() => setTrackMouseDown(true)}>
 				{sections}
